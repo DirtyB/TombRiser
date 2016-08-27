@@ -4,6 +4,8 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
@@ -14,10 +16,10 @@ import com.badlogic.gdx.utils.viewport.Viewport;
  */
 public class GameScreen implements Screen {
 
-    private static final boolean DEBUG = true;
+    private static final boolean DEBUG = false;
 
-    public static final int WORLD_WIDTH = 5;
-    public static final int WORLD_HEIGHT = 5;
+    public static final float   WORLD_WIDTH = 20.84f;
+    public static final float   WORLD_HEIGHT = 5;
 
     public static final int MIN_VISIBLE_WORLD_WIDTH = 5;
     public static final int MIN_VISIBLE_WORLD_HEIGHT = 5;
@@ -45,7 +47,7 @@ public class GameScreen implements Screen {
 
     //private Character character;
 
-    //private Sprite mapSprite;
+    private Sprite mapSprite;
 
     public GameScreen(final TombRiserGame game) {
         this.game = game;
@@ -99,10 +101,10 @@ public class GameScreen implements Screen {
 
         //character.setScale();
 
-        /*Texture mapTexture = new Texture(Gdx.files.internal("map.jpg"));
+        Texture mapTexture = new Texture(Gdx.files.internal("map.png"));
         mapSprite = new Sprite(mapTexture);
         mapSprite.setPosition(0,0);
-        mapSprite.setSize(WORLD_WIDTH,WORLD_HEIGHT);*/
+        mapSprite.setSize(WORLD_WIDTH,WORLD_HEIGHT);
 
     }
 
@@ -131,7 +133,7 @@ public class GameScreen implements Screen {
             // all drops
             game.batch.begin();
 
-            // mapSprite.draw(game.batch);
+            mapSprite.draw(game.batch);
             // character.draw(game.batch);
             ballObject.draw(game.batch);
 
