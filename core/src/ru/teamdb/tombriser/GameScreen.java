@@ -21,7 +21,7 @@ public class GameScreen implements Screen {
     public static final float   WORLD_WIDTH = 20.84f;
     public static final float   WORLD_HEIGHT = 5;
 
-    public static final int MIN_VISIBLE_WORLD_WIDTH = 5;
+    public static final int MIN_VISIBLE_WORLD_WIDTH = 21;
     public static final int MIN_VISIBLE_WORLD_HEIGHT = 5;
 
 
@@ -44,6 +44,7 @@ public class GameScreen implements Screen {
     private Body groundBody;
 
     Ball ballObject;
+    Cloud cloudObject;
 
     //private Character character;
 
@@ -62,6 +63,9 @@ public class GameScreen implements Screen {
 
         ballObject = new Ball(this, new Vector2(WORLD_WIDTH*0.5f, WORLD_HEIGHT*0.5f));
         ballObject.getBody().applyAngularImpulse(0.01f,true);
+
+        cloudObject = new Cloud(this, new Vector2(WORLD_WIDTH*0.5f+5, WORLD_HEIGHT*0.5f+2), 1) ;
+        cloudObject.getBody().setLinearVelocity(-2f, 0.0f);
 
 
 
@@ -117,6 +121,20 @@ public class GameScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0.2f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        Transform cloudTransform = cloudObject.getBody().getTransform();
+        Vector2  cloudCenter = cloudTransform.getPosition();
+        if (cloudCenter.x < -2 )
+        {
+            cloudObject.getBody().setTransform(WORLD_WIDTH+1,cloudCenter.y,cloudTransform.getRotation());
+
+        }
+
+
+
+
+
+
+
         //lookOnCharacter(character);
         // tell the camera to update its matrices.
         camera.update();
@@ -136,6 +154,7 @@ public class GameScreen implements Screen {
             mapSprite.draw(game.batch);
             // character.draw(game.batch);
             ballObject.draw(game.batch);
+            cloudObject.draw(game.batch);
 
             game.batch.end();
         }
