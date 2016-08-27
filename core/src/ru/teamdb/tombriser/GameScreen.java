@@ -44,7 +44,8 @@ public class GameScreen implements Screen {
     private Body groundBody;
 
     Ball ballObject;
-    Cloud cloudObject;
+    Cloud cloudObject, cloudObjectBig;
+
 
     //private Character character;
 
@@ -65,8 +66,10 @@ public class GameScreen implements Screen {
         ballObject.getBody().applyAngularImpulse(0.01f,true);
 
         cloudObject = new Cloud(this, new Vector2(WORLD_WIDTH*0.5f+5, WORLD_HEIGHT*0.5f+2), 1) ;
-        cloudObject.getBody().setLinearVelocity(-2f, 0.0f);
+        cloudObject.getBody().setLinearVelocity(-0.5f, 0.0f);
 
+        cloudObjectBig = new Cloud(this, new Vector2(WORLD_WIDTH*0.5f+5, WORLD_HEIGHT*0.5f+2), 1) ;
+        cloudObjectBig.getBody().setLinearVelocity(-1f, 0.0f);
 
 
         // Create our body definition
@@ -121,16 +124,25 @@ public class GameScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0.2f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+
+
+
         Transform cloudTransform = cloudObject.getBody().getTransform();
         Vector2  cloudCenter = cloudTransform.getPosition();
-        if (cloudCenter.x < -2 )
+        if (cloudCenter.x < -2)
         {
             cloudObject.getBody().setTransform(WORLD_WIDTH+1,cloudCenter.y,cloudTransform.getRotation());
 
         }
 
 
+        cloudTransform = cloudObjectBig.getBody().getTransform();
+        cloudCenter = cloudTransform.getPosition();
+        if (cloudCenter.x < -2)
+        {
+            cloudObjectBig.getBody().setTransform(WORLD_WIDTH+1,cloudCenter.y,cloudTransform.getRotation());
 
+        }
 
 
 
@@ -155,6 +167,8 @@ public class GameScreen implements Screen {
             // character.draw(game.batch);
             ballObject.draw(game.batch);
             cloudObject.draw(game.batch);
+            cloudObjectBig.draw(game.batch);
+
 
             game.batch.end();
         }
