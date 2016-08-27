@@ -46,6 +46,7 @@ public class GameScreen implements Screen {
     Ground ground;
     Ufo ufo;
 
+    Cloud cloudObject, cloudObjectBig;
 
     private Sprite mapSprite;
 
@@ -63,6 +64,11 @@ public class GameScreen implements Screen {
         ground = new Ground(this);
         ufo = new Ufo(this, new Vector2(WORLD_WIDTH*0.5f, WORLD_HEIGHT*0.8f));
 
+        cloudObject = new Cloud(this, new Vector2(WORLD_WIDTH*0.5f+5, WORLD_HEIGHT*0.5f+2), 1) ;
+        cloudObject.getBody().setLinearVelocity(-0.5f, 0.0f);
+
+        cloudObjectBig = new Cloud(this, new Vector2(WORLD_WIDTH*0.5f+5, WORLD_HEIGHT*0.5f+2), 1) ;
+        cloudObjectBig.getBody().setLinearVelocity(-1f, 0.0f);
 
         ball.getBody().applyAngularImpulse(0.05f,true);
 
@@ -82,6 +88,22 @@ public class GameScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0.2f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        Transform cloudTransform = cloudObject.getBody().getTransform();
+        Vector2  cloudCenter = cloudTransform.getPosition();
+        if (cloudCenter.x < -2)
+        {
+            cloudObject.getBody().setTransform(WORLD_WIDTH+1,cloudCenter.y,cloudTransform.getRotation());
+
+        }
+
+        cloudTransform = cloudObjectBig.getBody().getTransform();
+        cloudCenter = cloudTransform.getPosition();
+        if (cloudCenter.x < -2)
+        {
+            cloudObjectBig.getBody().setTransform(WORLD_WIDTH+1,cloudCenter.y,cloudTransform.getRotation());
+
+        }
+
         //lookOnCharacter(character);
         // tell the camera to update its matrices.
         camera.update();
@@ -97,6 +119,8 @@ public class GameScreen implements Screen {
             game.batch.begin();
 
             mapSprite.draw(game.batch);
+            cloudObject.draw(game.batch);
+            cloudObjectBig.draw(game.batch);
             ground.draw(game.batch);
             ball.draw(game.batch);
             ufo.draw(game.batch);
