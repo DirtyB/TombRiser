@@ -41,6 +41,8 @@ public class GameScreen implements Screen {
     private Body ball;
     private Body groundBody;
 
+    Ball ballObject;
+
     //private Character character;
 
     //private Sprite mapSprite;
@@ -56,33 +58,10 @@ public class GameScreen implements Screen {
         world = new World(WORLD_GRAVITY, true);
         debugRenderer = new Box2DDebugRenderer();
 
-        // First we create a ball definition
-        BodyDef bodyDef = new BodyDef();
-        // We set our ball to dynamic, for something like ground which doesn't move we would set it to StaticBody
-        bodyDef.type = BodyDef.BodyType.DynamicBody;
-        // Set our ball's starting position in the world
-        bodyDef.position.set(WORLD_WIDTH*0.5f, WORLD_HEIGHT*0.5f);
+        ballObject = new Ball(this, new Vector2(WORLD_WIDTH*0.5f, WORLD_HEIGHT*0.5f));
+        ballObject.getBody().applyAngularImpulse(0.01f,true);
 
-        // Create our ball in the world using our ball definition
-        ball = world.createBody(bodyDef);
 
-        // Create a circle shape and set its radius to 6
-        CircleShape circle = new CircleShape();
-        circle.setRadius(0.3f);
-
-        // Create a fixture definition to apply our shape to
-        FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.shape = circle;
-        fixtureDef.density = 0.5f;
-        fixtureDef.friction = 0.4f;
-        fixtureDef.restitution = 1f; // Make it bounce a little bit
-
-        // Create our fixture and attach it to the ball
-        Fixture fixture = ball.createFixture(fixtureDef);
-
-        // Remember to dispose of any shapes after you're done with them!
-        // BodyDef and FixtureDef don't need disposing, but shapes do.
-        circle.dispose();
 
         // Create our body definition
         BodyDef groundBodyDef = new BodyDef();
@@ -98,15 +77,17 @@ public class GameScreen implements Screen {
         // (setAsBox takes half-width and half-height as arguments)
         groundBox.setAsBox(WORLD_WIDTH*0.3f,0.1f);
         // Create a fixture from our polygon shape and add it to our ground body
-        fixtureDef = new FixtureDef();
-        fixtureDef.shape = groundBox;
-        fixtureDef.density = 0.5f;
-        fixtureDef.friction = 0.4f;
-        fixtureDef.restitution = 1f;
+        FixtureDef fixtureDef2 = new FixtureDef();
+        fixtureDef2.shape = groundBox;
+        fixtureDef2.density = 0.5f;
+        fixtureDef2.friction = 0.4f;
+        fixtureDef2.restitution = 1f;
 
-        groundBody.createFixture(fixtureDef);
+        groundBody.createFixture(fixtureDef2);
         // Clean up after ourselves
         groundBox.dispose();
+
+        System.out.println(world.getBodyCount());
 
         /*Texture characterTexture = new Texture(Gdx.files.internal("badlogic.jpg"));
         character = new Character(this,characterTexture);
@@ -140,6 +121,8 @@ public class GameScreen implements Screen {
 
         if(!DEBUG) {
 
+
+
             // tell the SpriteBatch to render in the
             // coordinate system specified by the camera.
             game.batch.setProjectionMatrix(camera.combined);
@@ -150,6 +133,7 @@ public class GameScreen implements Screen {
 
             // mapSprite.draw(game.batch);
             // character.draw(game.batch);
+            ballObject.draw(game.batch);
 
             game.batch.end();
         }
@@ -191,8 +175,9 @@ public class GameScreen implements Screen {
         accumulator += frameTime;
         while (accumulator >= TIME_STEP) {
             world.step(TIME_STEP, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
-            float y = ball.getLinearVelocity().y;
-            System.out.println(y);
+            //float x1 = ballObject.getBody().getPosition().x;
+            //float y1 = ballObject.getBody().getPosition().y;
+            //System.out.println("" + x1 + " " + y1 + " " + x2 + " " + y2);
             accumulator -= TIME_STEP;
         }
     }
@@ -237,6 +222,10 @@ public class GameScreen implements Screen {
     public void dispose() {
         world.dispose();
         debugRenderer.dispose();
+    }
+
+    public World getWorld() {
+        return world;
     }
 
 }
