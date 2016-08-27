@@ -31,7 +31,7 @@ public class Ball extends GameObject {
     @Override
     protected BodyDef getBodyDef() {
         BodyDef bodyDef = new BodyDef();
-        // We set our ballObject to dynamic, for something like ground which doesn't move we would set it to StaticBody
+        // We set our ball to dynamic, for something like ground which doesn't move we would set it to StaticBody
         bodyDef.type = BodyDef.BodyType.DynamicBody;
         return bodyDef;
     }
@@ -48,7 +48,7 @@ public class Ball extends GameObject {
         fixtureDef.friction = 0.4f;
         fixtureDef.restitution = 1f; // Make it bounce a little bit
 
-        // Create our fixture and attach it to the ballObject
+        // Create our fixture and attach it to the ball
         Fixture fixture = body.createFixture(fixtureDef);
 
         // Remember to dispose of any shapes after you're done with them!

@@ -14,7 +14,7 @@ import com.badlogic.gdx.utils.viewport.Viewport;
  */
 public class GameScreen implements Screen {
 
-    private static final boolean DEBUG = true;
+    private static boolean DEBUG = false;
 
     public static final int WORLD_WIDTH = 5;
     public static final int WORLD_HEIGHT = 5;
@@ -38,12 +38,8 @@ public class GameScreen implements Screen {
     private float accumulator = 0;
     private final Box2DDebugRenderer debugRenderer;
 
-    private Body ball;
-    private Body groundBody;
-
-    Ball ballObject;
-
-    //private Character character;
+    Ball ball;
+    Ground ground;
 
     //private Sprite mapSprite;
 
@@ -52,52 +48,15 @@ public class GameScreen implements Screen {
 
         camera = new OrthographicCamera();
         camera.position.set(new Vector2(WORLD_WIDTH*0.5f,WORLD_HEIGHT*0.5f),0);
-        //camera.setToOrtho(false, 800, 480);
         viewport = new ExtendViewport(MIN_VISIBLE_WORLD_WIDTH,MIN_VISIBLE_WORLD_HEIGHT,WORLD_WIDTH,WORLD_HEIGHT,camera);
 
         world = new World(WORLD_GRAVITY, true);
         debugRenderer = new Box2DDebugRenderer();
 
-        ballObject = new Ball(this, new Vector2(WORLD_WIDTH*0.5f, WORLD_HEIGHT*0.5f));
-        ballObject.getBody().applyAngularImpulse(0.01f,true);
+        ball = new Ball(this, new Vector2(WORLD_WIDTH*0.5f, WORLD_HEIGHT*0.5f));
+        ground = new Ground(this);
 
-
-
-        // Create our body definition
-        BodyDef groundBodyDef = new BodyDef();
-        // Set its world position
-        groundBodyDef.position.set(WORLD_WIDTH*0.5f,0);
-
-        // Create a body from the defintion and add it to the world
-        groundBody = world.createBody(groundBodyDef);
-
-        // Create a polygon shape
-        PolygonShape groundBox = new PolygonShape();
-        // Set the polygon shape as a box which is twice the size of our view port and 20 high
-        // (setAsBox takes half-width and half-height as arguments)
-        groundBox.setAsBox(WORLD_WIDTH*0.3f,0.1f);
-        // Create a fixture from our polygon shape and add it to our ground body
-        FixtureDef fixtureDef2 = new FixtureDef();
-        fixtureDef2.shape = groundBox;
-        fixtureDef2.density = 0.5f;
-        fixtureDef2.friction = 0.4f;
-        fixtureDef2.restitution = 1f;
-
-        groundBody.createFixture(fixtureDef2);
-        // Clean up after ourselves
-        groundBox.dispose();
-
-        System.out.println(world.getBodyCount());
-
-        /*Texture characterTexture = new Texture(Gdx.files.internal("badlogic.jpg"));
-        character = new Character(this,characterTexture);
-        character.resize(100,100);
-        character.setOriginPosition(WORLD_WIDTH*0.5f,WORLD_HEIGHT*0.5f);
-        System.out.println(character.getX()+" "+character.getY());
-        System.out.println(character.getOriginX()+" "+character.getOriginY());
-        System.out.println(character.getWidth()+" "+character.getHeight());*/
-
-        //character.setScale();
+        ball.getBody().applyAngularImpulse(0.05f,true);
 
         /*Texture mapTexture = new Texture(Gdx.files.internal("map.jpg"));
         mapSprite = new Sprite(mapTexture);
@@ -121,8 +80,6 @@ public class GameScreen implements Screen {
 
         if(!DEBUG) {
 
-
-
             // tell the SpriteBatch to render in the
             // coordinate system specified by the camera.
             game.batch.setProjectionMatrix(camera.combined);
@@ -132,8 +89,8 @@ public class GameScreen implements Screen {
             game.batch.begin();
 
             // mapSprite.draw(game.batch);
-            // character.draw(game.batch);
-            ballObject.draw(game.batch);
+            ball.draw(game.batch);
+            ground.draw(game.batch);
 
             game.batch.end();
         }
@@ -175,8 +132,8 @@ public class GameScreen implements Screen {
         accumulator += frameTime;
         while (accumulator >= TIME_STEP) {
             world.step(TIME_STEP, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
-            //float x1 = ballObject.getBody().getPosition().x;
-            //float y1 = ballObject.getBody().getPosition().y;
+            //float x1 = ball.getBody().getPosition().x;
+            //float y1 = ball.getBody().getPosition().y;
             //System.out.println("" + x1 + " " + y1 + " " + x2 + " " + y2);
             accumulator -= TIME_STEP;
         }
