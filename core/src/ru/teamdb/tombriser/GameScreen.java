@@ -1,11 +1,13 @@
 package ru.teamdb.tombriser;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
@@ -42,6 +44,8 @@ public class GameScreen implements Screen {
 
     Ball ball;
     Ground ground;
+    Ufo ufo;
+
 
     private Sprite mapSprite;
 
@@ -57,6 +61,8 @@ public class GameScreen implements Screen {
 
         ball = new Ball(this, new Vector2(WORLD_WIDTH*0.5f, WORLD_HEIGHT*0.5f));
         ground = new Ground(this);
+        ufo = new Ufo(this, new Vector2(WORLD_WIDTH*0.5f, WORLD_HEIGHT*0.8f));
+
 
         ball.getBody().applyAngularImpulse(0.05f,true);
 
@@ -93,6 +99,7 @@ public class GameScreen implements Screen {
             mapSprite.draw(game.batch);
             ground.draw(game.batch);
             ball.draw(game.batch);
+            ufo.draw(game.batch);
 
             game.batch.end();
         }
@@ -106,21 +113,8 @@ public class GameScreen implements Screen {
         game.shapeRenderer.circle(character.getX(),character.getY(),10);
         game.shapeRenderer.end();*/
 
-       /* int direction = 1;
-        if(Gdx.input.isKeyPressed(Input.Keys.UP)){
-            character.stepForward(delta);
-        }
-        else if(Gdx.input.isKeyPressed(Input.Keys.DOWN)){
-            character.stepForward(-delta);
-            direction = -1;
-        }
-
-        if(Gdx.input.isKeyPressed(Input.Keys.LEFT)){
-            character.rotateLeft(direction*delta);
-        }
-        else if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
-            character.rotateLeft(direction*-delta);
-        }*/
+        moveUfo();
+        lookOnUfo();
 
         doPhysicsStep(deltaTime);
 
@@ -134,27 +128,38 @@ public class GameScreen implements Screen {
         accumulator += frameTime;
         while (accumulator >= TIME_STEP) {
             world.step(TIME_STEP, VELOCITY_ITERATIONS, POSITION_ITERATIONS);
-            //float x1 = ball.getBody().getPosition().x;
-            //float y1 = ball.getBody().getPosition().y;
-            //System.out.println("" + x1 + " " + y1 + " " + x2 + " " + y2);
             accumulator -= TIME_STEP;
         }
     }
 
-    /*public void lookOnCharacter(Character character){
+    protected void moveUfo(){
+        Vector2 movement = new Vector2(0,0);
+        if(Gdx.input.isKeyPressed(Input.Keys.UP)){
+            movement.y = 1;
+        }
+        else if(Gdx.input.isKeyPressed(Input.Keys.DOWN)){
+            movement.y = -1;
+        }
+        if(Gdx.input.isKeyPressed(Input.Keys.LEFT)){
+            movement.x = -1;
+        }
+        else if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
+            movement.x = 1;
+        }
+        ufo.move(movement);
+    }
 
-        float characterX = character.getOriginPositionX();
-        float characterY = character.getOriginPositionY();
+    protected void lookOnUfo(){
+
+        Vector2 position = ufo.getSpriteOriginPosition();
 
         float viewportWidth = viewport.getWorldWidth();
-        float viewportHeight = viewport.getWorldHeight();
 
-        float camX = MathUtils.clamp(characterX,viewportWidth*0.5f,WORLD_WIDTH-viewportWidth*0.5f);
-        float camY = MathUtils.clamp(characterY,viewportHeight*0.5f,WORLD_HEIGHT-viewportHeight*0.5f);
+        float camX = MathUtils.clamp(position.x,viewportWidth*0.5f,WORLD_WIDTH-viewportWidth*0.5f);
 
-        camera.position.set(new Vector2(camX,camY),0);
+        camera.position.set(new Vector2(camX,camera.position.y),0);
 
-    }*/
+    }
 
     @Override
     public void resize(int width, int height) {
