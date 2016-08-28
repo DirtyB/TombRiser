@@ -30,7 +30,7 @@ public class GameScreen implements Screen {
     public static final int MIN_VISIBLE_WORLD_WIDTH = 5;
     public static final int MIN_VISIBLE_WORLD_HEIGHT = 5;
 
-    public static int HUMAN_COUNT = 2;
+    public static int HUMAN_COUNT = 6;
 
 
     public static final Vector2 WORLD_GRAVITY = new Vector2(0, -10);
@@ -51,7 +51,7 @@ public class GameScreen implements Screen {
     private final Box2DDebugRenderer debugRenderer;
 
 
-    Tutan ball;
+    Tutan tutan;
     Ground ground;
     Ufo ufo;
     Light light;
@@ -73,7 +73,7 @@ public class GameScreen implements Screen {
         world = new World(WORLD_GRAVITY, true);
         debugRenderer = new Box2DDebugRenderer();
 
-        ball = new Tutan(this, new Vector2(WORLD_WIDTH*0.5f, WORLD_HEIGHT*0.5f));
+        tutan = new Tutan(this, new Vector2(WORLD_WIDTH*0.5f, WORLD_HEIGHT*0.5f));
         ground = new Ground(this);
         ufo = new Ufo(this, new Vector2(WORLD_WIDTH*0.5f, WORLD_HEIGHT*0.8f));
         light = new Light(this, new Vector2(WORLD_WIDTH*0.5f , WORLD_HEIGHT*0.8f - 2),6);
@@ -84,7 +84,7 @@ public class GameScreen implements Screen {
         cloudObjectBig = new Cloud(this, new Vector2(WORLD_WIDTH*0.5f+5, WORLD_HEIGHT*0.5f+1), 1) ;
         cloudObjectBig.getBody().setLinearVelocity(-0.4f, 0.0f);
 
-        ball.getBody().applyAngularImpulse(0,false);
+        tutan.getBody().applyAngularImpulse(0,false);
 
         Texture mapTexture = new Texture(Gdx.files.internal("map.png"));
         mapSprite = new Sprite(mapTexture);
@@ -93,10 +93,10 @@ public class GameScreen implements Screen {
 
         humans = new ArrayList<Human>(HUMAN_COUNT);
         for(int i = 0; i<HUMAN_COUNT/2; i++){
-            humans.add(new Human(this, (WORLD_WIDTH*0.5f)+ (i+1)));
+            humans.add(new Human(this, 0 - (i+1)*2));
         }
         for(int i = HUMAN_COUNT/2; i<HUMAN_COUNT; i++){
-            humans.add(new Human(this, WORLD_WIDTH*0.5f- (i- HUMAN_COUNT/2 +1)));
+            humans.add(new Human(this, WORLD_WIDTH + (i- HUMAN_COUNT/2 +1)*2));
         }
 
         stones = new LinkedList<Stone>();
@@ -150,7 +150,7 @@ public class GameScreen implements Screen {
             cloudObject.draw(game.batch);
             cloudObjectBig.draw(game.batch);
             ground.draw(game.batch);
-            ball.draw(game.batch);
+            tutan.draw(game.batch);
 
             for(Stone stone: stones){
                 stone.draw(game.batch);
@@ -200,7 +200,7 @@ protected void light(){
     if (Gdx.input.isKeyPressed(Input.Keys.SPACE)){
 
         Vector2 ufoCenter = ufo.getBody().getWorldCenter();
-        ball.pull(ufoCenter);
+        tutan.pull(ufoCenter);
         for(Stone stone: stones){
             stone.pull(ufoCenter);
         }

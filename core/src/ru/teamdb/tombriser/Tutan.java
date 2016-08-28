@@ -5,16 +5,16 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.BodyDef;
-import com.badlogic.gdx.physics.box2d.CircleShape;
-import com.badlogic.gdx.physics.box2d.Fixture;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
+import com.badlogic.gdx.physics.box2d.PolygonShape;
 
 /**
  * Created by boris_0mrym3f on 27.08.2016.
  */
 public class Tutan extends PullableObject {
 
-    protected static float RADIUS = 0.3f;
+    public static final float TUTAN_WIDTH = 20 * 0.02f;
+    public static final float TUTAN_HEIGHT = 51 * 0.02f;
 
     public Tutan(GameScreen gameScreen, Vector2 position) {
         super(gameScreen, position);
@@ -22,10 +22,10 @@ public class Tutan extends PullableObject {
 
     @Override
     protected void initSprite() {
-        Texture texture = new Texture(Gdx.files.internal("sarcophagos.png"));
+        Texture texture = new Texture(Gdx.files.internal("sarcophagus.png"));
         sprite = new Sprite(texture);
-        sprite.setSize(2* RADIUS,2* RADIUS);
-        sprite.setOrigin(RADIUS, RADIUS);
+        sprite.setSize(TUTAN_WIDTH, TUTAN_HEIGHT);
+        sprite.setOrigin(TUTAN_WIDTH *0.5f, TUTAN_HEIGHT *0.5f );
     }
 
     @Override
@@ -38,21 +38,23 @@ public class Tutan extends PullableObject {
 
     @Override
     protected void createFixtures() {
-        CircleShape circle = new CircleShape();
-        circle.setRadius(RADIUS);
+        // Create a polygon shape
+        PolygonShape groundBox = new PolygonShape();
+        // Set the polygon shape as a box which is twice the size of our view port and 20 high
+        // (setAsBox takes half-width and half-height as arguments)
+        groundBox.setAsBox(TUTAN_WIDTH *0.5f, TUTAN_HEIGHT *0.5f );
+        // Create a fixture from our polygon shape and add it to our ground body
+        FixtureDef fixtureDef2 = new FixtureDef();
+        fixtureDef2.shape = groundBox;
+        fixtureDef2.density = 0.5f;
+        fixtureDef2.friction = 0.4f;
+        fixtureDef2.restitution = 0f;
 
-        // Create a fixture definition to apply our shape to
-        FixtureDef fixtureDef = new FixtureDef();
-        fixtureDef.shape = circle;
-        fixtureDef.density = 0.5f;
-        fixtureDef.friction = 0.5f;
-        fixtureDef.restitution = 0f; // Make it bounce a little bit
+        body.createFixture(fixtureDef2);
+        // Clean up after ourselves
+        groundBox.dispose();
 
-        // Create our fixture and attach it to the ball
-        Fixture fixture = body.createFixture(fixtureDef);
-
-        // Remember to dispose of any shapes after you're done with them!
-        // BodyDef and FixtureDef don't need disposing, but shapes do.
-        circle.dispose();
     }
+
+
 }

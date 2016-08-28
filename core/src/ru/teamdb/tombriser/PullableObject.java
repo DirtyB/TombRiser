@@ -7,7 +7,7 @@ import com.badlogic.gdx.math.Vector2;
  */
 public abstract class PullableObject extends GameObject {
 
-    public static final float PULLING_FORCE = 8f;
+    public static final float PULLING_FORCE = 5f;
 
     public PullableObject(GameScreen gameScreen, Vector2 position) {
         super(gameScreen, position);
