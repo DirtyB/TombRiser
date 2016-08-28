@@ -24,7 +24,7 @@ public class GameScreen implements Screen {
 
     private static boolean DEBUG = false;
 
-    public static final float   WORLD_WIDTH = 20.84f;
+    public static final float   WORLD_WIDTH = 14f;
     public static final float   WORLD_HEIGHT = 5;
 
     public static final int MIN_VISIBLE_WORLD_WIDTH = 5;
@@ -32,7 +32,7 @@ public class GameScreen implements Screen {
 
     public static int HUMAN_COUNT = 6;
 
-    public static final Vector2 winPoint = new Vector2(WORLD_WIDTH*0.5f+1, Ground.GROUND_HEIGHT/*WORLD_HEIGHT*0.5f*/);
+    public static final Vector2 winPoint = new Vector2(WORLD_WIDTH*0.5f, /*Ground.GROUND_HEIGHT*/ WORLD_HEIGHT*0.5f);
 
 
     public static final Vector2 WORLD_GRAVITY = new Vector2(0, -10);
@@ -67,6 +67,8 @@ public class GameScreen implements Screen {
     private Sprite mapSprite;
     private Sprite winSprite;
 
+    private Sprite finishSprite;
+
 
     public GameScreen(final TombRiserGame game) {
         this.game = game;
@@ -92,15 +94,20 @@ public class GameScreen implements Screen {
 
         tutan.getBody().applyAngularImpulse(0,false);
 
-        Texture mapTexture = new Texture(Gdx.files.internal("map.png"));
+        Texture mapTexture = new Texture(Gdx.files.internal("map1.png"));
         mapSprite = new Sprite(mapTexture);
         mapSprite.setPosition(0,0);
         mapSprite.setSize(WORLD_WIDTH,WORLD_HEIGHT);
 
-        Texture winTexture = new Texture(Gdx.files.internal("badlogic.jpg"));
+        Texture winTexture = new Texture(Gdx.files.internal("win.png"));
         winSprite = new Sprite(winTexture);
         winSprite.setPosition(winPoint.x,winPoint.y);
-        winSprite.setSize(0.3f,0.3f);
+        winSprite.setSize(0.3f,0.39f);
+
+        Texture finishTexture = new Texture(Gdx.files.internal("finish.png"));
+        finishSprite = new Sprite(finishTexture);
+        finishSprite.setPosition(winPoint.x- 3.45f/2,winPoint.y-3.35f/2 );
+        finishSprite.setSize(3.45f,3.35f);
 
         humans = new ArrayList<Human>(HUMAN_COUNT);
         for(int i = 0; i<HUMAN_COUNT/2; i++){
@@ -158,6 +165,10 @@ public class GameScreen implements Screen {
 
 
             ufo.draw(game.batch);
+
+            if(isPaused){
+                finishSprite.draw(game.batch);
+            }
 
             game.batch.end();
         }
