@@ -46,6 +46,7 @@ public class GameScreen implements Screen {
     Ground ground;
     Ufo ufo;
 
+
     Cloud cloudObject, cloudObjectBig;
 
     private Sprite mapSprite;
@@ -65,10 +66,10 @@ public class GameScreen implements Screen {
         ufo = new Ufo(this, new Vector2(WORLD_WIDTH*0.5f, WORLD_HEIGHT*0.8f));
 
         cloudObject = new Cloud(this, new Vector2(WORLD_WIDTH*0.5f+5, WORLD_HEIGHT*0.5f+2), 1) ;
-        cloudObject.getBody().setLinearVelocity(-0.5f, 0.0f);
+        cloudObject.getBody().setLinearVelocity(-0.2f, 0.0f);
 
-        cloudObjectBig = new Cloud(this, new Vector2(WORLD_WIDTH*0.5f+5, WORLD_HEIGHT*0.5f+2), 1) ;
-        cloudObjectBig.getBody().setLinearVelocity(-1f, 0.0f);
+        cloudObjectBig = new Cloud(this, new Vector2(WORLD_WIDTH*0.5f+5, WORLD_HEIGHT*0.5f+1), 1) ;
+        cloudObjectBig.getBody().setLinearVelocity(-0.4f, 0.0f);
 
         ball.getBody().applyAngularImpulse(0.05f,true);
 
@@ -156,21 +157,58 @@ public class GameScreen implements Screen {
         }
     }
 
-    protected void moveUfo(){
-        Vector2 movement = new Vector2(0,0);
-        if(Gdx.input.isKeyPressed(Input.Keys.UP)){
+
+
+
+    protected void moveUfo() {
+
+
+        Vector2 movement = new Vector2(0, 0);
+
+
+        if (Gdx.input.isKeyPressed(Input.Keys.UP)) {
             movement.y = 1;
-        }
-        else if(Gdx.input.isKeyPressed(Input.Keys.DOWN)){
+
+
+        } else if (Gdx.input.isKeyPressed(Input.Keys.DOWN)) {
             movement.y = -1;
+
         }
-        if(Gdx.input.isKeyPressed(Input.Keys.LEFT)){
+        if (Gdx.input.isKeyPressed(Input.Keys.LEFT)) {
             movement.x = -1;
-        }
-        else if(Gdx.input.isKeyPressed(Input.Keys.RIGHT)){
+
+        } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
             movement.x = 1;
+
+            if (Gdx.input.isKeyPressed(Input.Keys.SPACE)){
+
+            }
+
+
         }
-        ufo.move(movement);
+        // Проверка на экран
+        if (ufo.getBody().getPosition().y <= WORLD_HEIGHT - 0.4f && ufo.getBody().getPosition().x <= WORLD_WIDTH - 0.7f &&
+                ufo.getBody().getPosition().y >= 0.4f &&   ufo.getBody().getPosition().x >= 0.7f  ) {
+
+
+            ufo.move(movement);
+        } else if(ufo.getBody().getPosition().y >= WORLD_HEIGHT -0.4f){
+            movement.y = -0.05f;
+            ufo.move(movement);
+        }
+        else if(ufo.getBody().getPosition().y <= 0.4f){
+            movement.y = 0.05f;
+            ufo.move(movement);
+        }
+        else if(ufo.getBody().getPosition().x <=  0.7f){
+            movement.x = 0.05f;
+            ufo.move(movement);
+        }
+        else if(ufo.getBody().getPosition().x >= WORLD_WIDTH-0.7f){
+            movement.x = -0.05f;
+            ufo.move(movement);
+        }
+
     }
 
     protected void lookOnUfo(){
