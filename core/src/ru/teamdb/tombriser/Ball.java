@@ -45,8 +45,8 @@ public class Ball extends GameObject {
         FixtureDef fixtureDef = new FixtureDef();
         fixtureDef.shape = circle;
         fixtureDef.density = 0.5f;
-        fixtureDef.friction = 0.4f;
-        fixtureDef.restitution = 1f; // Make it bounce a little bit
+        fixtureDef.friction = 0.5f;
+        fixtureDef.restitution = 0f; // Make it bounce a little bit
 
         // Create our fixture and attach it to the ball
         Fixture fixture = body.createFixture(fixtureDef);

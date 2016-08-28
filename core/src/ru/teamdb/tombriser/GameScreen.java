@@ -76,7 +76,7 @@ public class GameScreen implements Screen {
         cloudObjectBig = new Cloud(this, new Vector2(WORLD_WIDTH*0.5f+5, WORLD_HEIGHT*0.5f+1), 1) ;
         cloudObjectBig.getBody().setLinearVelocity(-0.4f, 0.0f);
 
-        ball.getBody().applyAngularImpulse(0.05f,true);
+        ball.getBody().applyAngularImpulse(0,false);
 
         Texture mapTexture = new Texture(Gdx.files.internal("map.png"));
         mapSprite = new Sprite(mapTexture);
@@ -175,6 +175,24 @@ public class GameScreen implements Screen {
 protected void light(){
 
     if (Gdx.input.isKeyPressed(Input.Keys.SPACE)){
+
+        if(   ufo.getBody().getWorldCenter().x > ball.getBody().getPosition().x -0.5f)// &&  ufo.getBody().getWorldCenter().x< ball.getBody().getPosition().x +0.5 ){
+
+        {   ball.getBody().applyForceToCenter(-ufo.getBody().getWorldCenter().x/100+1,ufo.getBody().getWorldCenter().y/2,false );
+            //ball.getBody().applyAngularImpulse(0,false);
+
+
+        }
+        else if(ufo.getBody().getWorldCenter().x< ball.getBody().getPosition().x +0.5 ){
+            ball.getBody().applyForceToCenter(ufo.getBody().getWorldCenter().x/100-2,ufo.getBody().getWorldCenter().y/2,false );
+           // ball.getBody().applyAngularImpulse(0,false);
+
+        }
+        ball.getBody().applyForceToCenter(0,0,false);
+      //  ball.getBody().applyAngularImpulse(0,false);
+
+
+
 
         isLightOn = true;
 

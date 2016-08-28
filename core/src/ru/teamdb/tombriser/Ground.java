@@ -46,7 +46,7 @@ public class Ground extends GameObject {
         fixtureDef2.shape = groundBox;
         fixtureDef2.density = 0.5f;
         fixtureDef2.friction = 0.4f;
-        fixtureDef2.restitution = 1f;
+        fixtureDef2.restitution = 0f;
 
         body.createFixture(fixtureDef2);
         // Clean up after ourselves
