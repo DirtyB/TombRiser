@@ -35,6 +35,8 @@ public class GameScreen implements Screen {
 
     public final TombRiserGame game;
 
+    boolean isLightOn;
+
     private OrthographicCamera camera;
     private Viewport viewport;
 
@@ -42,9 +44,11 @@ public class GameScreen implements Screen {
     private float accumulator = 0;
     private final Box2DDebugRenderer debugRenderer;
 
+
     Ball ball;
     Ground ground;
     Ufo ufo;
+    Light light;
 
 
     Cloud cloudObject, cloudObjectBig;
@@ -64,6 +68,7 @@ public class GameScreen implements Screen {
         ball = new Ball(this, new Vector2(WORLD_WIDTH*0.5f, WORLD_HEIGHT*0.5f));
         ground = new Ground(this);
         ufo = new Ufo(this, new Vector2(WORLD_WIDTH*0.5f, WORLD_HEIGHT*0.8f));
+        light = new Light(this, new Vector2(WORLD_WIDTH*0.5f , WORLD_HEIGHT*0.8f - 2),6);
 
         cloudObject = new Cloud(this, new Vector2(WORLD_WIDTH*0.5f+5, WORLD_HEIGHT*0.5f+2), 1) ;
         cloudObject.getBody().setLinearVelocity(-0.2f, 0.0f);
@@ -124,6 +129,12 @@ public class GameScreen implements Screen {
             cloudObjectBig.draw(game.batch);
             ground.draw(game.batch);
             ball.draw(game.batch);
+
+          if (isLightOn) {
+              light.draw(game.batch);
+          }
+
+
             ufo.draw(game.batch);
 
             game.batch.end();
@@ -132,6 +143,7 @@ public class GameScreen implements Screen {
             debugRenderer.render(world, camera.combined);
         }
 
+
         /*game.shapeRenderer.setProjectionMatrix(camera.combined);
 
         game.shapeRenderer.begin();
@@ -139,6 +151,7 @@ public class GameScreen implements Screen {
         game.shapeRenderer.end();*/
 
         moveUfo();
+        light();
         lookOnUfo();
 
         doPhysicsStep(deltaTime);
@@ -158,6 +171,18 @@ public class GameScreen implements Screen {
     }
 
 
+
+protected void light(){
+
+    if (Gdx.input.isKeyPressed(Input.Keys.SPACE)){
+
+        isLightOn = true;
+
+    } else {
+        isLightOn = false;
+    }
+
+}
 
 
     protected void moveUfo() {
@@ -180,13 +205,10 @@ public class GameScreen implements Screen {
         } else if (Gdx.input.isKeyPressed(Input.Keys.RIGHT)) {
             movement.x = 1;
 
-            if (Gdx.input.isKeyPressed(Input.Keys.SPACE)){
-
-            }
-
 
         }
-        // Проверка на экран
+
+        /* Проверка на экран */
         if (ufo.getBody().getPosition().y <= WORLD_HEIGHT - 0.4f && ufo.getBody().getPosition().x <= WORLD_WIDTH - 0.7f &&
                 ufo.getBody().getPosition().y >= 0.4f &&   ufo.getBody().getPosition().x >= 0.7f  ) {
 
@@ -199,6 +221,7 @@ public class GameScreen implements Screen {
         else if(ufo.getBody().getPosition().y <= 0.4f){
             movement.y = 0.05f;
             ufo.move(movement);
+
         }
         else if(ufo.getBody().getPosition().x <=  0.7f){
             movement.x = 0.05f;
@@ -208,8 +231,12 @@ public class GameScreen implements Screen {
             movement.x = -0.05f;
             ufo.move(movement);
         }
+        light.getBody().setTransform(ufo.getBody().getPosition().x,ufo.getBody().getPosition().y,0);
+
 
     }
+
+
 
     protected void lookOnUfo(){
 

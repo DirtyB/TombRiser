@@ -24,10 +24,10 @@ public class Light extends GameObject {
 
     @Override
     protected void initSprite() {
-        Texture texture = new Texture(Gdx.files.internal("cloud.png"));
+        Texture texture = new Texture(Gdx.files.internal("light.png"));
         sprite = new Sprite(texture);
         sprite.setSize( 2.485f  , 1 );
-        sprite.setOrigin(1, 0.5f);
+        sprite.setOrigin(4.2f, 5.15f);
     }
 
     @Override
@@ -58,4 +58,6 @@ public class Light extends GameObject {
         circle.dispose();
 
     }
+
+
 }
