@@ -9,7 +9,7 @@ import com.badlogic.gdx.physics.box2d.*;
 /**
  * Created by boris_0mrym3f on 27.08.2016.
  */
-public class Stone extends GameObject {
+public class Stone extends PullableObject {
 
 
     public static final float STONE_WIDTH = 2 * 0.7f;

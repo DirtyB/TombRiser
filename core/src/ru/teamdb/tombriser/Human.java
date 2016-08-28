@@ -92,7 +92,7 @@ public class Human extends GameObject {
 
     protected void makeStepSeeking(){
         float x = body.getTransform().getPosition().x;
-        System.out.println(x);
+        //System.out.println(x);
         float offset = -7f;
         if(x > - offset && x < GameScreen.WORLD_WIDTH + offset){
             float movementX = direction.equals(Direction.RIGHT) ? HUMAN_VELOCITY : -HUMAN_VELOCITY;

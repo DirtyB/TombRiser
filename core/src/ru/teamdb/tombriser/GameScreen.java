@@ -153,13 +153,6 @@ public class GameScreen implements Screen {
             ground.draw(game.batch);
             ball.draw(game.batch);
 
-          if (isLightOn) {
-              light.draw(game.batch);
-          }
-
-
-            ufo.draw(game.batch);
-
             for(Stone stone: stones){
                 stone.draw(game.batch);
             }
@@ -168,7 +161,12 @@ public class GameScreen implements Screen {
                 human.draw(game.batch);
             }
 
+            if (isLightOn) {
+                light.draw(game.batch);
+            }
 
+
+            ufo.draw(game.batch);
 
             game.batch.end();
         }
@@ -202,23 +200,20 @@ protected void light(){
 
     if (Gdx.input.isKeyPressed(Input.Keys.SPACE)){
 
-        if(   ufo.getBody().getWorldCenter().x > ball.getBody().getPosition().x -0.5f)// &&  ufo.getBody().getWorldCenter().x< ball.getBody().getPosition().x +0.5 ){
-
-        {   ball.getBody().applyForceToCenter(-ufo.getBody().getWorldCenter().x/100+1,ufo.getBody().getWorldCenter().y/2,false );
-            //ball.getBody().applyAngularImpulse(0,false);
-
-
+        /*if(ufo.getBody().getWorldCenter().x > ball.getBody().getPosition().x -0.5f){
+            System.out.println("pulling-1");
+            ball.getBody().applyForceToCenter(-ufo.getBody().getWorldCenter().x/100+1,ufo.getBody().getWorldCenter().y/2,false );
         }
         else if(ufo.getBody().getWorldCenter().x< ball.getBody().getPosition().x +0.5 ){
+            System.out.println("pulling-2");
             ball.getBody().applyForceToCenter(ufo.getBody().getWorldCenter().x/100-2,ufo.getBody().getWorldCenter().y/2,false );
-           // ball.getBody().applyAngularImpulse(0,false);
-
         }
-        ball.getBody().applyForceToCenter(0,0,false);
-      //  ball.getBody().applyAngularImpulse(0,false);
-
-
-
+        //ball.getBody().applyForceToCenter(0,0,false);*/
+        Vector2 ufoCenter = ufo.getBody().getWorldCenter();
+        ball.pull(ufoCenter);
+        for(Stone stone: stones){
+            stone.pull(ufoCenter);
+        }
 
         isLightOn = true;
 

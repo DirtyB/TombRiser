@@ -12,7 +12,7 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 /**
  * Created by boris_0mrym3f on 27.08.2016.
  */
-public class Ball extends GameObject {
+public class Ball extends PullableObject {
 
     protected static float RADIUS = 0.3f;
 
