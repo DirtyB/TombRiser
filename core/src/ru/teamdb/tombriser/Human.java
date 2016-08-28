@@ -106,7 +106,7 @@ public class Human extends GameObject {
     protected void makeStepPulling(){
         float x = body.getTransform().getPosition().x;
         //System.out.println(x);
-        float offset = 2f;
+        float offset = 3f;
         float halfWordWidth =  GameScreen.WORLD_WIDTH * 0.5f;
         if(x < halfWordWidth  - offset || x > halfWordWidth + offset){
             float movementX = direction.equals(Direction.RIGHT) ? HUMAN_VELOCITY : -HUMAN_VELOCITY;
