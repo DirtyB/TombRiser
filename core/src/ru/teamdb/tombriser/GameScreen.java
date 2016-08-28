@@ -243,6 +243,7 @@ public class GameScreen implements Screen {
             isLightOn = false;
         }
 
+
     }
 
 
@@ -297,9 +298,22 @@ public class GameScreen implements Screen {
 
     }
 
+    private float recentSpeed = 1;
+
     protected boolean checkCompleted(){
+        float epsilon = 0.01f;
+        boolean overlaps = tutan.sprite.getBoundingRectangle().overlaps( winSprite.getBoundingRectangle() );
+
+        if(isLightOn){
+            recentSpeed = 1;
+        }
+
+        float speedNow = tutan.body.getLinearVelocity().len();
+        recentSpeed = 0.5f * speedNow + 0.5f * recentSpeed;
+        System.out.println(overlaps + " " + recentSpeed);
+
         return  tutan.sprite.getBoundingRectangle().overlaps( winSprite.getBoundingRectangle() )
-                && (tutan.body.getLinearVelocity().isZero())
+                && recentSpeed < epsilon
                 && !isLightOn;
     }
 
