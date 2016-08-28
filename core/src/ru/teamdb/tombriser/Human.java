@@ -18,8 +18,8 @@ import java.util.Map;
  */
 public class Human extends GameObject {
 
-    public static final float HUMAN_WIDTH = 19 * 0.03f;
-    public static final float HUMAN_HEIGHT = 28 * 0.03f;
+    public static final float HUMAN_WIDTH = 19 * 0.02f;
+    public static final float HUMAN_HEIGHT = 28 * 0.02f;
 
     public static final float HUMAN_VELOCITY = 0.8f;
 

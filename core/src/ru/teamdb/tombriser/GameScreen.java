@@ -14,7 +14,6 @@ import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -31,7 +30,7 @@ public class GameScreen implements Screen {
     public static final int MIN_VISIBLE_WORLD_WIDTH = 5;
     public static final int MIN_VISIBLE_WORLD_HEIGHT = 5;
 
-    public static int HUMAN_COUNT = 6;
+    public static int HUMAN_COUNT = 2;
 
 
     public static final Vector2 WORLD_GRAVITY = new Vector2(0, -10);
@@ -52,7 +51,7 @@ public class GameScreen implements Screen {
     private final Box2DDebugRenderer debugRenderer;
 
 
-    Ball ball;
+    Tutan ball;
     Ground ground;
     Ufo ufo;
     Light light;
@@ -74,7 +73,7 @@ public class GameScreen implements Screen {
         world = new World(WORLD_GRAVITY, true);
         debugRenderer = new Box2DDebugRenderer();
 
-        ball = new Ball(this, new Vector2(WORLD_WIDTH*0.5f, WORLD_HEIGHT*0.5f));
+        ball = new Tutan(this, new Vector2(WORLD_WIDTH*0.5f, WORLD_HEIGHT*0.5f));
         ground = new Ground(this);
         ufo = new Ufo(this, new Vector2(WORLD_WIDTH*0.5f, WORLD_HEIGHT*0.8f));
         light = new Light(this, new Vector2(WORLD_WIDTH*0.5f , WORLD_HEIGHT*0.8f - 2),6);
@@ -202,15 +201,15 @@ protected void light(){
 
     if (Gdx.input.isKeyPressed(Input.Keys.SPACE)){
 
-        if(   ufo.getBody().getWorldCenter().x > ball.getBody().getPosition().x -0.5f)// &&  ufo.getBody().getWorldCenter().x< ball.getBody().getPosition().x +0.5 ){
+        if(   ufo.getBody().getWorldCenter().x > ball.getBody().getPosition().x)// &&  ufo.getBody().getWorldCenter().x< ball.getBody().getPosition().x +0.5 ){
 
         {   ball.getBody().applyForceToCenter(-ufo.getBody().getWorldCenter().x/100+1,ufo.getBody().getWorldCenter().y/2,false );
             //ball.getBody().applyAngularImpulse(0,false);
 
 
         }
-        else if(ufo.getBody().getWorldCenter().x< ball.getBody().getPosition().x +0.5 ){
-            ball.getBody().applyForceToCenter(ufo.getBody().getWorldCenter().x/100-2,ufo.getBody().getWorldCenter().y/2,false );
+        else if(ufo.getBody().getWorldCenter().x< ball.getBody().getPosition().x  ){
+            ball.getBody().applyForceToCenter(ufo.getBody().getWorldCenter().x/100-1,ufo.getBody().getWorldCenter().y/2,false );
            // ball.getBody().applyAngularImpulse(0,false);
 
         }
