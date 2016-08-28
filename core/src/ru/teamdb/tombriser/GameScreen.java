@@ -299,7 +299,7 @@ public class GameScreen implements Screen {
 
     protected boolean checkCompleted(){
         return  tutan.sprite.getBoundingRectangle().overlaps( winSprite.getBoundingRectangle() )
-                && (tutan.body.getLinearVelocity().len() < 0.01)
+                && (tutan.body.getLinearVelocity().isZero())
                 && !isLightOn;
     }
 
