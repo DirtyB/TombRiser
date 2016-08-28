@@ -32,6 +32,8 @@ public class GameScreen implements Screen {
 
     public static int HUMAN_COUNT = 6;
 
+    public static final Vector2 winPoint = new Vector2(WORLD_WIDTH*0.5f+1, Ground.GROUND_HEIGHT/*WORLD_HEIGHT*0.5f*/);
+
 
     public static final Vector2 WORLD_GRAVITY = new Vector2(0, -10);
 
@@ -50,6 +52,7 @@ public class GameScreen implements Screen {
     private float accumulator = 0;
     private final Box2DDebugRenderer debugRenderer;
 
+    private boolean isPaused = false;
 
     Tutan tutan;
     Ground ground;
@@ -62,6 +65,8 @@ public class GameScreen implements Screen {
     Cloud cloudObject, cloudObjectBig;
 
     private Sprite mapSprite;
+    private Sprite winSprite;
+
 
     public GameScreen(final TombRiserGame game) {
         this.game = game;
@@ -73,7 +78,8 @@ public class GameScreen implements Screen {
         world = new World(WORLD_GRAVITY, true);
         debugRenderer = new Box2DDebugRenderer();
 
-        tutan = new Tutan(this, new Vector2(WORLD_WIDTH*0.5f, WORLD_HEIGHT*0.5f));
+        tutan = new Tutan(this, new Vector2(WORLD_WIDTH*0.5f, WORLD_HEIGHT*0.3f));
+        //tutan.body.applyLinearImpulse(0,-0.01f,0,0,true);
         ground = new Ground(this);
         ufo = new Ufo(this, new Vector2(WORLD_WIDTH*0.5f, WORLD_HEIGHT*0.8f));
         light = new Light(this, new Vector2(WORLD_WIDTH*0.5f , WORLD_HEIGHT*0.8f - 2),6);
@@ -90,6 +96,11 @@ public class GameScreen implements Screen {
         mapSprite = new Sprite(mapTexture);
         mapSprite.setPosition(0,0);
         mapSprite.setSize(WORLD_WIDTH,WORLD_HEIGHT);
+
+        Texture winTexture = new Texture(Gdx.files.internal("badlogic.jpg"));
+        winSprite = new Sprite(winTexture);
+        winSprite.setPosition(winPoint.x,winPoint.y);
+        winSprite.setSize(0.3f,0.3f);
 
         humans = new ArrayList<Human>(HUMAN_COUNT);
         for(int i = 0; i<HUMAN_COUNT/2; i++){
@@ -112,26 +123,6 @@ public class GameScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0.2f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        Transform cloudTransform = cloudObject.getBody().getTransform();
-        Vector2  cloudCenter = cloudTransform.getPosition();
-        if (cloudCenter.x < -2)
-        {
-            cloudObject.getBody().setTransform(WORLD_WIDTH+1,cloudCenter.y,cloudTransform.getRotation());
-
-        }
-
-        cloudTransform = cloudObjectBig.getBody().getTransform();
-        cloudCenter = cloudTransform.getPosition();
-        if (cloudCenter.x < -2)
-        {
-            cloudObjectBig.getBody().setTransform(WORLD_WIDTH+1,cloudCenter.y,cloudTransform.getRotation());
-
-        }
-
-        for(Human human: humans){
-            human.makeStep();
-        }
-
         //lookOnCharacter(character);
         // tell the camera to update its matrices.
         camera.update();
@@ -147,6 +138,7 @@ public class GameScreen implements Screen {
             game.batch.begin();
 
             mapSprite.draw(game.batch);
+            winSprite.draw(game.batch);
             cloudObject.draw(game.batch);
             cloudObjectBig.draw(game.batch);
             ground.draw(game.batch);
@@ -173,11 +165,37 @@ public class GameScreen implements Screen {
             debugRenderer.render(world, camera.combined);
         }
 
-        moveUfo();
-        light();
-        lookOnUfo();
+        if(!isPaused) {
 
-        doPhysicsStep(deltaTime);
+            Transform cloudTransform = cloudObject.getBody().getTransform();
+            Vector2 cloudCenter = cloudTransform.getPosition();
+            if (cloudCenter.x < -2) {
+                cloudObject.getBody().setTransform(WORLD_WIDTH + 1, cloudCenter.y, cloudTransform.getRotation());
+
+            }
+
+            cloudTransform = cloudObjectBig.getBody().getTransform();
+            cloudCenter = cloudTransform.getPosition();
+            if (cloudCenter.x < -2) {
+                cloudObjectBig.getBody().setTransform(WORLD_WIDTH + 1, cloudCenter.y, cloudTransform.getRotation());
+
+            }
+
+            for (Human human : humans) {
+                human.makeStep();
+            }
+
+
+            moveUfo();
+            light();
+            lookOnUfo();
+
+            if (checkCompleted()) {
+                win();
+            }
+
+            doPhysicsStep(deltaTime);
+        }
 
     }
 
@@ -193,25 +211,28 @@ public class GameScreen implements Screen {
         }
     }
 
-
-
-protected void light(){
-
-    if (Gdx.input.isKeyPressed(Input.Keys.SPACE)){
-
-        Vector2 ufoCenter = ufo.getBody().getWorldCenter();
-        tutan.pull(ufoCenter);
-        for(Stone stone: stones){
-            stone.pull(ufoCenter);
-        }
-
-        isLightOn = true;
-
-    } else {
-        isLightOn = false;
+    protected void win(){
+        pause();
     }
 
-}
+
+    protected void light(){
+
+        if (Gdx.input.isKeyPressed(Input.Keys.SPACE)){
+
+            Vector2 ufoCenter = ufo.getBody().getWorldCenter();
+            tutan.pull(ufoCenter);
+            for(Stone stone: stones){
+                stone.pull(ufoCenter);
+            }
+
+            isLightOn = true;
+
+        } else {
+            isLightOn = false;
+        }
+
+    }
 
 
     protected void moveUfo() {
@@ -265,6 +286,11 @@ protected void light(){
 
     }
 
+    protected boolean checkCompleted(){
+        return  tutan.sprite.getBoundingRectangle().overlaps( winSprite.getBoundingRectangle() )
+                && tutan.body.getLinearVelocity().isZero()
+                && !isLightOn;
+    }
 
 
     protected void lookOnUfo(){
@@ -294,10 +320,12 @@ protected void light(){
 
     @Override
     public void pause() {
+        isPaused = true;
     }
 
     @Override
     public void resume() {
+        isPaused = false;
     }
 
     @Override
