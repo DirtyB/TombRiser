@@ -13,14 +13,21 @@ public abstract class PullableObject extends GameObject {
         super(gameScreen, position);
     }
 
-    public void pull(Vector2 ufoCenter){
+    /**
+     *
+     * @param ufoCenter
+     * @return true if pulled
+     */
+    public boolean pull(Vector2 ufoCenter){
         Vector2 uc = ufoCenter.cpy();
         Vector2 center = body.getWorldCenter();
         Vector2 direction = uc.sub(center);
         float angle = direction.angle();
         if(angle >= 70 && angle <= 110){
             body.applyForceToCenter(direction.nor().scl(PULLING_FORCE),true);
+            return true;
         }
+        return false;
     }
 
 

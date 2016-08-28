@@ -15,6 +15,8 @@ public class Stone extends PullableObject {
     public static final float STONE_WIDTH = 2 * 0.7f;
     public static final float STONE_HEIGHT = 0.7f;
 
+    private Human pullingHuman;
+
     public Stone(GameScreen gameScreen, float positionX) {
         super(gameScreen, new Vector2(positionX, Ground.GROUND_HEIGHT+ STONE_HEIGHT*0.5f));
     }
@@ -54,4 +56,24 @@ public class Stone extends PullableObject {
         groundBox.dispose();
 
     }
+
+    @Override
+    public boolean pull(Vector2 ufoCenter) {
+        if(super.pull(ufoCenter)){
+            if(this.pullingHuman != null) {
+                this.pullingHuman.releaseStone();
+            }
+            return true;
+        }
+        return false;
+    }
+
+    public Human getPullingHuman() {
+        return pullingHuman;
+    }
+
+    public void setPullingHuman(Human pullingHuman) {
+        this.pullingHuman = pullingHuman;
+    }
+
 }

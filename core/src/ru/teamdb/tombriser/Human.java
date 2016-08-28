@@ -93,7 +93,7 @@ public class Human extends GameObject {
     protected void makeStepSeeking(){
         float x = body.getTransform().getPosition().x;
         //System.out.println(x);
-        float offset = -7f;
+        float offset = 1f;
         if(x > - offset && x < GameScreen.WORLD_WIDTH + offset){
             float movementX = direction.equals(Direction.RIGHT) ? HUMAN_VELOCITY : -HUMAN_VELOCITY;
             move(new Vector2(movementX,0f));
@@ -113,12 +113,11 @@ public class Human extends GameObject {
             move(new Vector2(movementX * 0.5f,0f));
         }
         else {
-            seekForStone();
+            releaseStone();
         }
     }
 
     protected void seekForStone(){
-        releaseStone();
         state = HumanState.SEEKING;
         direction = (body.getTransform().getPosition().x < GameScreen.WORLD_WIDTH*0.5) ? Direction.LEFT : Direction.RIGHT;
         sprite.setTexture(textures.get("seeking"));
@@ -142,6 +141,7 @@ public class Human extends GameObject {
         stonePosition += direction.equals(Direction.RIGHT) ? -stoneOffset : stoneOffset;
         pulledStone = new Stone(gameScreen, stonePosition);
         gameScreen.getStones().add(pulledStone);
+        pulledStone.setPullingHuman(this);
 
         sprite.setTexture(textures.get("pulling"));
         sprite.setFlip( direction.equals(Direction.RIGHT), false );
@@ -166,7 +166,9 @@ public class Human extends GameObject {
         }
         gameScreen.getWorld().destroyJoint(stoneJoint);
         stoneJoint = null;
+        pulledStone.setPullingHuman(null);
         pulledStone = null;
+        seekForStone();
     }
 
 
