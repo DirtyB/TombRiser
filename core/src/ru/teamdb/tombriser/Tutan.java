@@ -12,17 +12,17 @@ import com.badlogic.gdx.physics.box2d.FixtureDef;
 /**
  * Created by boris_0mrym3f on 27.08.2016.
  */
-public class Ball extends PullableObject {
+public class Tutan extends PullableObject {
 
     protected static float RADIUS = 0.3f;
 
-    public Ball(GameScreen gameScreen, Vector2 position) {
+    public Tutan(GameScreen gameScreen, Vector2 position) {
         super(gameScreen, position);
     }
 
     @Override
     protected void initSprite() {
-        Texture texture = new Texture(Gdx.files.internal("badlogic.jpg"));
+        Texture texture = new Texture(Gdx.files.internal("sarcophagos.png"));
         sprite = new Sprite(texture);
         sprite.setSize(2* RADIUS,2* RADIUS);
         sprite.setOrigin(RADIUS, RADIUS);

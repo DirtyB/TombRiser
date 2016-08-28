@@ -12,8 +12,8 @@ import com.badlogic.gdx.physics.box2d.*;
 public class Stone extends PullableObject {
 
 
-    public static final float STONE_WIDTH = 2 * 0.7f;
-    public static final float STONE_HEIGHT = 0.7f;
+    public static final float STONE_WIDTH = 2 * 0.4f;
+    public static final float STONE_HEIGHT = 0.4f;
 
     private Human pullingHuman;
 
