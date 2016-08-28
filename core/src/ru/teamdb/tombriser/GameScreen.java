@@ -13,6 +13,11 @@ import com.badlogic.gdx.physics.box2d.*;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+
 /**
  * Created by boris_0mrym3f on 16.04.2016.
  */
@@ -25,6 +30,8 @@ public class GameScreen implements Screen {
 
     public static final int MIN_VISIBLE_WORLD_WIDTH = 5;
     public static final int MIN_VISIBLE_WORLD_HEIGHT = 5;
+
+    public static int HUMAN_COUNT = 6;
 
 
     public static final Vector2 WORLD_GRAVITY = new Vector2(0, -10);
@@ -46,6 +53,8 @@ public class GameScreen implements Screen {
     Ground ground;
     Ufo ufo;
 
+    List<Human> humans;
+    List<Stone> stones;
 
     Cloud cloudObject, cloudObjectBig;
 
@@ -78,6 +87,16 @@ public class GameScreen implements Screen {
         mapSprite.setPosition(0,0);
         mapSprite.setSize(WORLD_WIDTH,WORLD_HEIGHT);
 
+        humans = new ArrayList<Human>(HUMAN_COUNT);
+        for(int i = 0; i<HUMAN_COUNT/2; i++){
+            humans.add(new Human(this, (WORLD_WIDTH*0.5f)+ (i+1)));
+        }
+        for(int i = HUMAN_COUNT/2; i<HUMAN_COUNT; i++){
+            humans.add(new Human(this, WORLD_WIDTH*0.5f- (i- HUMAN_COUNT/2 +1)));
+        }
+
+        stones = new LinkedList<Stone>();
+
     }
 
     @Override
@@ -105,6 +124,10 @@ public class GameScreen implements Screen {
 
         }
 
+        for(Human human: humans){
+            human.makeStep();
+        }
+
         //lookOnCharacter(character);
         // tell the camera to update its matrices.
         camera.update();
@@ -126,17 +149,21 @@ public class GameScreen implements Screen {
             ball.draw(game.batch);
             ufo.draw(game.batch);
 
+            for(Stone stone: stones){
+                stone.draw(game.batch);
+            }
+
+            for(Human human: humans){
+                human.draw(game.batch);
+            }
+
+
+
             game.batch.end();
         }
         else {
             debugRenderer.render(world, camera.combined);
         }
-
-        /*game.shapeRenderer.setProjectionMatrix(camera.combined);
-
-        game.shapeRenderer.begin();
-        game.shapeRenderer.circle(character.getX(),character.getY(),10);
-        game.shapeRenderer.end();*/
 
         moveUfo();
         lookOnUfo();
@@ -252,6 +279,10 @@ public class GameScreen implements Screen {
 
     public World getWorld() {
         return world;
+    }
+
+    public List<Stone> getStones(){
+        return stones;
     }
 
 }
